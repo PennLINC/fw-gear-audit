@@ -100,10 +100,8 @@ def gather_seqInfo(args):
         args (from argparse)
     '''
     logger.info("Running fw-heudiconv-tabulate to collect sequence info...")
-    if args.path:
-        path = args.path
-    else:
-        path = './tmp'
+
+    path = './tmp'
 
     command = ['mkdir', path]
     p = sub.Popen(command, stdout=sub.PIPE, stdin=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
@@ -233,6 +231,9 @@ def main():
                     session_labels=args.session,
                     subject_labels=args.subject)
 
+    logger.info('Found sessions:\n\t%s',
+                     "\n\t".join(['%s (%s)' % (ses['label'], ses.id) for ses in sessions]))
+
     gear_df = gather_jobs(sessions, args.verbose)
 
     if gear_df.shape == (0, 0):
@@ -252,7 +253,12 @@ def main():
 
                 logger.info('Merging sequence info and gear run data...')
                 seq_df.rename(columns={'patient_id': 'subject'}, inplace = True)
+                seq_df['subject'] = seq_df['subject'].astype('str')
+                gear_df['subject'] = gear_df['subject'].astype('str')
                 final_df = pd.merge(gear_df, seq_df, on='subject', how='outer')
+
+        else:
+            final_df = gear_df.copy()
 
         if args.dry_run:
             logger.info(tabulate(final_df, headers='keys', tablefmt='psql'))
@@ -262,6 +268,6 @@ def main():
     logger.info("Done!")
 
     sys.exit(0)
-    
+
 if __name__ == '__main__':
     main()

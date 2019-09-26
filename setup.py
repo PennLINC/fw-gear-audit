@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fw-gear-audit",
-    version="0.0.2",
+    version="0.0.3",
     author="Tinashe M. Tapera",
     author_email="tinashemtapera@gmail.com",
     description="A Python SDK tool for auditing gear run data",
@@ -29,7 +29,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'fw-gear-audit=FlywheelGearAudit.__main__:main',
+            'fw-gear-audit=FlywheelGearAudit.__main__:main'
         ],
     }
 )

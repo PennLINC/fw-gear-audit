@@ -4,7 +4,7 @@ A Python SDK tool for auditing gear run data
 Use this tool to fetch data from Flywheel describing which gears have been run within a project and how they were configured. You can also join SeqInfo data to help filter your data by sequences.
 
 ```
-usage: FlywheelGearAudit.py [-h] --project PROJECT [PROJECT ...]
+usage: fw-gear-audit [-h] --project PROJECT [PROJECT ...]
                             [--subject SUBJECT [SUBJECT ...]]
                             [--session SESSION [SESSION ...]] [--verbose]
                             [--dry_run] (--path PATH | --fname FNAME)

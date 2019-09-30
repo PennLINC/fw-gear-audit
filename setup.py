@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fw-gear-audit",
-    version="0.0.3",
+    version="0.0.4",
     author="Tinashe M. Tapera",
     author_email="tinashemtapera@gmail.com",
     description="A Python SDK tool for auditing gear run data",

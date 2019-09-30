@@ -62,33 +62,51 @@ def gather_jobs(sessions_list, verbose):
     df = pd.DataFrame()
     for sess in sessions_list:
 
-        for al in sess.analyses:
-
+        if len(sess.analyses) < 1:
             basic_row = {
                 'subject': sess.subject.label,
                 'session': sess.label,
-                'gear_name': al.gear_info['name'],
-                'gear_version': al.gear_info['version'],
-                'run_label': al.label,
-                'run_datetime': al.job['created'],
-                'run_runtime_mins': al.job.profile['elapsed_time_ms'],
-                'run_status': al.job.state
+                'gear_name': None,
+                'gear_version': None,
+                'run_label': None,
+                'run_datetime': None,
+                'run_runtime_mins': None,
+                'run_status': None
             }
 
             final = pd.DataFrame(basic_row, index=[0])
 
-            if verbose:
-
-                config = al.job.config['config']
-                inputs = al.job.inputs
-                inputs = {k: v['name'] for k, v in inputs.items()}
-
-                config_cols = pd.DataFrame(list(config.items()), columns=['Config_Option', 'Config_Value'])
-                inputs_cols = pd.DataFrame(list(inputs.items()), columns=['Inputs_Option', 'Inputs_Value'])
-
-                final = pd.concat([final, inputs_cols, config_cols], axis=1)
-
             df = pd.concat([df, final])
+
+        else:
+            for al in sess.analyses:
+
+                basic_row = {
+                    'subject': sess.subject.label,
+                    'session': sess.label,
+                    'gear_name': al.gear_info['name'],
+                    'gear_version': al.gear_info['version'],
+                    'run_label': al.label,
+                    'run_datetime': al.job['created'],
+                    'run_runtime_mins': al.job.profile['elapsed_time_ms'],
+                    'run_status': al.job.state
+                }
+
+                final = pd.DataFrame(basic_row, index=[0])
+
+                if verbose:
+
+                    config = al.job.config['config']
+                    inputs = al.job.inputs
+                    inputs = {k: v['name'] for k, v in inputs.items()}
+
+                    config_cols = pd.DataFrame(list(config.items()), columns=['Config_Option', 'Config_Value'])
+                    inputs_cols = pd.DataFrame(list(inputs.items()), columns=['Inputs_Option', 'Inputs_Value'])
+
+                    final = pd.concat([final, inputs_cols, config_cols], axis=1)
+
+
+                df = pd.concat([df, final])
 
     return(df)
 
@@ -255,7 +273,7 @@ def main():
                 seq_df.rename(columns={'patient_id': 'subject'}, inplace = True)
                 seq_df['subject'] = seq_df['subject'].astype('str')
                 gear_df['subject'] = gear_df['subject'].astype('str')
-                final_df = pd.merge(gear_df, seq_df, on='subject', how='outer')
+                final_df = seq_df.merge(gear_df, 'left')
 
         else:
             final_df = gear_df.copy()

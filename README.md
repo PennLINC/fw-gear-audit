@@ -13,7 +13,7 @@ usage: fw-gear-audit [-h] --project PROJECT [PROJECT ...]
 
 # Example
 
-> Who in my gear_testing project has a rest-bold scan? Do they all have fMRIPrep run on them?
+> Who in my gear_testing project has a T1 scan? Do they all have fMRIPrep run on them?
 
 1. Query
 ```
